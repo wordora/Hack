@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SYSTEM CRITICAL ERROR</title>
+    <title>CRITICAL SYSTEM ERROR</title>
     <style>
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: black; overflow: hidden; font-family: 'Courier New', monospace; }
         
@@ -25,8 +25,9 @@
 
         @keyframes shake { 0% { transform: translate(1px, 1px); } 50% { transform: translate(-2px, 2px); } 100% { transform: translate(1px, -1px); } }
 
-        h1 { color: #ff0000; font-size: 1.8rem; text-transform: uppercase; }
-        .timer-text { font-size: 3rem; color: #ffff00; margin: 20px 0; font-weight: bold; }
+        h1 { color: #ff0000; font-size: 1.8rem; text-transform: uppercase; margin-bottom: 10px; }
+        .target-name { color: #ffffff; font-size: 1.5rem; font-weight: bold; text-decoration: underline; }
+        .timer-text { font-size: 3.5rem; color: #ffff00; margin: 15px 0; font-weight: bold; }
         
         .btn {
             background: #ff0000; color: white; padding: 15px 30px;
@@ -43,6 +44,13 @@
         }
         
         #prank-screen h2 { font-size: 4rem; margin: 0; }
+
+        /* বিস্ফোরণ ইফেক্ট এর জন্য */
+        .explode-animation { animation: explode 0.8s forwards; }
+        @keyframes explode {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(5); opacity: 0; }
+        }
     </style>
 </head>
 <body>
@@ -50,40 +58,41 @@
     <div id="matrix-bg"></div>
 
     <div class="overlay" id="main-content">
-        <div class="warning-box">
-            <h1>⚠️ SYSTEM BREACH DETECTED ⚠️</h1>
+        <div class="warning-box" id="wb">
+            <h1>⚠️ SYSTEM BREACH ⚠️</h1>
+            <p class="target-name">Ahmed Maimun ,</p>
             <p>আপনার সকল ডাটা এনক্রিপ্ট হচ্ছে।</p>
-            <p>২ মিনিটের মধ্যে টাকা না পাঠালে ফাইলগুলো বিস্ফোরিত হবে!</p>
+            <p>২ মিনিটের মধ্যে 1000 টাকা না পাঠালে ফাইলগুলো বিস্ফোরিত হবে!</p>
             <div class="timer-text" id="timer">02:00</div>
             <button class="btn" onclick="triggerPrank()">নিচের এইখানে ক্লিক করলে টাকা পাঠান</button>
         </div>
     </div>
 
-    <div id="prank-screen" id="prank-screen">
+    <div id="prank-screen">
         <h2>😂 PRANKED! 😂</h2>
-        <p>আপনার ফোন নিরাপদ আছে। এটি শুধু একটি মজা ছিল!</p>
-        <button onclick="location.reload()" style="padding: 10px; cursor: pointer; margin-top: 20px;">পেছনে ফিরে যান</button>
+        <p>আপনার ফোন বা কম্পিউটার একদম নিরাপদ।</p>
+        <button onclick="location.reload()" style="padding: 10px; margin-top: 20px; cursor: pointer;">আবার দেখুন</button>
     </div>
 
     <script>
-        // পেছনের অদ্ভুত কোড
+        // পেছনের অদ্ভুত কোড জেনারেটর
         const bg = document.getElementById('matrix-bg');
         const chars = "W*(&)A#A#*(A#*%)(&%)*()&%#$@!^&*(0987654321";
         function updateMatrix() {
             let content = "";
-            for(let i=0; i<1000; i++) {
+            for(let i=0; i<1200; i++) {
                 content += chars.charAt(Math.floor(Math.random() * chars.length));
             }
             bg.innerText = content;
         }
         setInterval(updateMatrix, 50);
 
-        // টাইমার
+        // টাইমার লজিক
         let timeLeft = 120;
         const timerInterval = setInterval(() => {
             if (timeLeft <= 0) {
                 clearInterval(timerInterval);
-                triggerPrank(); // সময় শেষ হলে সরাসরি প্র্যাঙ্ক পেজ আসবে
+                autoExplode(); // সময় শেষ হলে বিস্ফোরণ
                 return;
             }
             timeLeft--;
@@ -92,11 +101,17 @@
             document.getElementById('timer').innerText = `0${mins}:${secs < 10 ? '0' + secs : secs}`;
         }, 1000);
 
-        // প্র্যাঙ্ক দেখানোর মূল ফাংশন
         function triggerPrank() {
-            clearInterval(timerInterval); // টাইমার থামিয়ে দেওয়া
+            clearInterval(timerInterval);
             document.getElementById('main-content').style.display = 'none';
             document.getElementById('prank-screen').style.display = 'flex';
+        }
+
+        function autoExplode() {
+            document.getElementById('wb').classList.add('explode-animation');
+            setTimeout(() => {
+                triggerPrank();
+            }, 800);
         }
     </script>
 </body>
