@@ -2,54 +2,151 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>SYSTEM CRITICAL ERROR</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRITICAL SYSTEM MELTDOWN</title>
     <style>
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: black; overflow: hidden; font-family: 'Courier New', monospace; }
-        #matrix-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; color: #00FF00; font-size: 14px; white-space: pre-wrap; word-break: break-all; opacity: 0.4; z-index: 1; }
-        .overlay { position: relative; z-index: 10; display: flex; align-items: center; justify-content: center; height: 100vh; }
-        .warning-box { background: rgba(20, 0, 0, 0.9); border: 3px solid #ff0000; padding: 40px; text-align: center; box-shadow: 0 0 50px #ff0000; max-width: 500px; color: white; animation: shake 0.5s infinite; }
-        @keyframes shake { 0% { transform: translate(1px, 1px); } 20% { transform: translate(-3px, 0px); } 40% { transform: translate(3px, 2px); } 60% { transform: translate(-1px, -1px); } 80% { transform: translate(-1px, -2px); } 100% { transform: translate(1px, -2px); } }
-        h1 { color: #ff0000; font-size: 2rem; text-transform: uppercase; }
-        .timer-text { font-size: 3rem; color: #ffff00; margin: 20px 0; font-weight: bold; }
-        .btn { background: #ff0000; color: white; padding: 15px 30px; font-size: 1.2rem; border: none; cursor: pointer; font-weight: bold; }
-        #prank-screen { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(45deg, #12c2e9, #c471ed, #f64f59); z-index: 100; flex-direction: column; align-items: center; justify-content: center; color: white; text-align: center; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: black; overflow: hidden; font-family: 'Courier New', Courier, monospace; }
+        
+        /* পেছনের হ্যাকিং কোড ইফেক্ট */
+        #matrix-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            color: #00FF00; font-size: 14px; line-height: 1.2;
+            white-space: pre-wrap; word-break: break-all;
+            opacity: 0.4; z-index: 1;
+        }
+
+        /* মূল ওয়ার্নিং বক্স */
+        .overlay {
+            position: relative; z-index: 10; display: flex; align-items: center;
+            justify-content: center; height: 100vh;
+        }
+
+        .warning-box {
+            background: rgba(20, 0, 0, 0.9);
+            border: 3px solid #ff0000;
+            padding: 40px; text-align: center;
+            box-shadow: 0 0 50px #ff0000;
+            max-width: 500px; color: white;
+            animation: shake 0.5s infinite;
+        }
+
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            40% { transform: translate(3px, 2px) rotate(-1deg); }
+            60% { transform: translate(-1px, -1px) rotate(1deg); }
+            80% { transform: translate(-1px, -2px) rotate(-1deg); }
+            100% { transform: translate(1px, -2px) rotate(-0deg); }
+        }
+
+        h1 { color: #ff0000; font-size: 2rem; margin-bottom: 10px; text-transform: uppercase; }
+        p { margin: 10px 0; }
+        .timer-text { font-size: 3.5rem; color: #ffff00; margin: 20px 0; font-weight: bold; }
+        
+        .btn {
+            background: #ff0000; color: white; padding: 15px 30px;
+            font-size: 1.2rem; border: none; cursor: pointer;
+            font-weight: bold; text-decoration: none; display: inline-block;
+            box-shadow: 0 0 15px #ff0000; transition: 0.3s;
+        }
+        .btn:hover { transform: scale(1.1); background: #b30000; }
+
+        /* বিস্ফোরণ ইফেক্ট */
+        .explode {
+            animation: explodeEffect 1s forwards;
+            opacity: 0; /* শুরুতে অদৃশ্য */
+        }
+        @keyframes explodeEffect {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(5) rotate(720deg); opacity: 0; }
+        }
+        .fragment {
+            position: absolute; color: white; font-size: 18px; opacity: 0;
+            animation: flyAway 2s forwards;
+        }
+        @keyframes flyAway {
+            0% { opacity: 1; transform: translate(0,0); }
+            100% { opacity: 0; transform: translate(var(--dx), var(--dy)) rotate(var(--rot)); }
+        }
+
+        /* প্র্যাঙ্ক পেজ */
+        #prank-screen {
+            display: none; position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%; background: linear-gradient(45deg, #12c2e9, #c471ed, #f64f59);
+            z-index: 100; flex-direction: column; align-items: center;
+            justify-content: center; color: white; text-align: center;
+            animation: fadeIn 1s;
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        #prank-screen h2 { font-size: 5rem; text-shadow: 5px 5px black; margin: 0; }
+        #prank-screen p { font-size: 1.5rem; background: rgba(0,0,0,0.5); padding: 10px; }
     </style>
 </head>
 <body>
+
     <div id="matrix-bg"></div>
+
     <div class="overlay" id="main-content">
         <div class="warning-box">
-            <h1>⚠️ SYSTEM COMPROMISED ⚠️</h1>
-            <p>1000 TK না পাঠালে আপনার সমস্ত তথ্য ডিলিট হয়ে যাবে!</p>
-            <div class="timer-text" id="timer">05:00</div>
+            <h1>⚠️ SYSTEM MELTDOWN INITIATED ⚠️</h1>
+            <p>আপনার সকল ডাটা এবং ফাইল এখন এনক্রিপ্ট হচ্ছে।</p>
+            <p>২ মিনিটের মধ্যে টাকা না পাঠালে সকল তথ্য বিস্ফোরিত হবে!</p>
+            <div class="timer-text" id="timer">02:00</div>
             <button class="btn" onclick="triggerPrank()">নিচের এইখানে ক্লিক করলে টাকা পাঠান</button>
         </div>
     </div>
+
     <div id="prank-screen">
         <h2>😂 PRANKED! 😂</h2>
-        <p>Your device is safe. This was just a simulation by <b>AI King</b>.</p>
+        <p>আপনার ফোন নিরাপদ আছে। এটি শুধু একটি মজা ছিল!</p>
+        <button onclick="location.reload()" class="btn" style="margin-top:20px;">পেছনে ফিরে যান</button>
     </div>
+
     <script>
+        // পেছনের অদ্ভুত কোড জেনারেটর
         const bg = document.getElementById('matrix-bg');
         const chars = "W*(&)A#A#*(A#*%)(&%)*()&%#$@!^&*(0987654321";
         function updateMatrix() {
             let content = "";
-            for(let i=0; i<1500; i++) { content += chars.charAt(Math.floor(Math.random() * chars.length)); }
+            for(let i=0; i<1500; i++) {
+                content += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
             bg.innerText = content;
         }
         setInterval(updateMatrix, 50);
-        let timeLeft = 300;
-        setInterval(() => {
-            if (timeLeft <= 0) return;
+
+        // কাউন্টডাউন টাইমার (২ মিনিট = ১২০ সেকেন্ড)
+        let timeLeft = 120;
+        const timerElem = document.getElementById('timer');
+        const timerInterval = setInterval(() => {
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                explodeScreen(); // সময় শেষ হলে বিস্ফোরণ
+                return;
+            }
             timeLeft--;
             let mins = Math.floor(timeLeft / 60);
             let secs = timeLeft % 60;
-            document.getElementById('timer').innerText = `0${mins}:${secs < 10 ? '0' + secs : secs}`;
+            timerElem.innerText = `0${mins}:${secs < 10 ? '0' + secs : secs}`;
         }, 1000);
-        function triggerPrank() {
-            document.getElementById('main-content').style.display = 'none';
-            document.getElementById('prank-screen').style.display = 'flex';
-        }
-    </script>
-</body>
-</html>
+
+        // বিস্ফোরণ ইফেক্ট
+        function explodeScreen() {
+            const mainBox = document.querySelector('.warning-box');
+            mainBox.classList.add('explode'); // মূল বক্স অদৃশ্য হবে
+            
+            // লেখার টুকরোগুলো ছড়িয়ে দেওয়া
+            const texts = ["SYSTEM", "COMPROMISED", "1000 TK", "DELETE", "EXPLODE", "DATA"];
+            texts.forEach(text => {
+                const fragment = document.createElement('div');
+                fragment.className = 'fragment';
+                fragment.innerText = text;
+                fragment.style.setProperty('--dx', `${Math.random() * 400 - 200}px`);
+                fragment.style.setProperty('--dy', `${Math.random() * 400 - 200}px`);
+                fragment.style.setProperty('--rot', `${Math.random() * 720 - 360}deg`);
+                document.body.appendChild(fragment);
+            });
+
+            setTimeout(() => {
+                document.getElementById('main-content').style.display = 'none';
