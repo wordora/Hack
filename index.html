@@ -3,108 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FATAL SYSTEM CORRUPTION</title>
+    <title>SYSTEM CRITICAL ERROR</title>
     <style>
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; overflow: hidden; font-family: 'Courier New', monospace; }
-        
         canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
-
-        .overlay { 
-            position: relative; z-index: 10; display: flex; 
-            align-items: center; justify-content: center; height: 100vh; 
-        }
-
-        /* মুভিং ইন্টারফেস: বক্সটি বড়-ছোট হবে এবং কাঁপবে */
+        
+        /* এলার্ট বক্স স্টাইল - যা ভাসতে থাকবে (Floating) */
+        .overlay { position: relative; z-index: 10; display: flex; align-items: center; justify-content: center; height: 100vh; }
+        
         .warning-box { 
-            background: rgba(50, 0, 0, 0.9); 
-            border: 5px solid #ff0000; 
-            padding: 40px; text-align: center; 
+            background: rgba(40, 0, 0, 0.95); 
+            border: 4px solid #ff0000; 
+            padding: 30px; 
+            text-align: center; 
             box-shadow: 0 0 100px #ff0000; 
-            max-width: 500px; color: #fff;
-            animation: moveAlert 2s infinite ease-in-out, glitch 0.2s infinite; 
+            max-width: 450px; 
+            color: #ff0000; 
+            display: none;
+            position: absolute;
+            animation: floatMove 6s ease-in-out infinite, shake 0.1s infinite;
         }
 
-        /* বক্সটি বড়-ছোট হওয়ার এনিমেশন */
-        @keyframes moveAlert {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
+        /* বক্সটির নড়াচড়া করার এনিমেশন */
+        @keyframes floatMove {
+            0%, 100% { transform: translateY(0) translateX(0); }
+            50% { transform: translateY(-30px) translateX(20px); }
         }
 
-        /* গ্লিচ ইফেক্ট (কাঁপাকাঁপি) */
-        @keyframes glitch {
-            0% { transform: translate(0); }
-            20% { transform: translate(-5px, 5px); }
-            40% { transform: translate(-5px, -5px); }
-            60% { transform: translate(5px, 5px); }
-            80% { transform: translate(5px, -5px); }
-            100% { transform: translate(0); }
-        }
+        @keyframes shake { 0% { border-color: #ff0000; } 50% { border-color: #fff; } 100% { border-color: #ff0000; } }
 
-        h1 { 
-            font-size: 2.5rem; color: #000; background: #ff0000; 
-            padding: 10px; margin: 0; text-transform: uppercase;
-            animation: flash 0.5s infinite;
-        }
+        /* শুরুর পপআপ */
+        #start-popup { position: fixed; z-index: 2000; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: flex; align-items: center; justify-content: center; color: white; text-align: center; }
+        .popup-btn { background: #ff0000; color: #fff; border: 4px solid #fff; padding: 20px 40px; font-size: 1.5rem; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .popup-btn:hover { background: #fff; color: #ff0000; }
 
-        @keyframes flash {
-            0% { background: #ff0000; }
-            50% { background: #ffcc00; }
-        }
-
-        .timer-text { 
-            font-size: 5rem; color: #ffff00; font-weight: bold; 
-            margin: 20px 0; text-shadow: 0 0 20px #ff0000; 
-        }
-
-        .btn { 
-            background: #ff0000; color: #fff; padding: 20px 40px; 
-            font-size: 1.5rem; border: none; cursor: pointer; 
-            font-weight: 900; animation: btnMove 1s infinite alternate;
-        }
-
-        @keyframes btnMove {
-            from { transform: translateY(0); box-shadow: 0 0 10px red; }
-            to { transform: translateY(-10px); box-shadow: 0 0 30px red; }
-        }
-
-        /* প্র্যাঙ্ক স্ক্রিন */
+        h1 { font-size: 1.8rem; background: red; color: black; padding: 5px; margin: 0; text-transform: uppercase; }
+        .timer-text { font-size: 4rem; color: #ffff00; font-weight: bold; margin: 15px 0; text-shadow: 0 0 15px yellow; }
+        
+        /* প্র্যাঙ্ক স্ক্রিন - এটি আরও আধুনিক */
         #prank-screen { 
-            display: none; position: fixed; top: 0; left: 0; 
-            width: 100%; height: 100%; background: #fff; 
-            z-index: 1000; flex-direction: column; align-items: center; 
-            justify-content: center; color: #000; text-align: center; 
+            display: none; 
+            position: fixed; 
+            top: 0; left: 0; 
+            width: 100%; height: 100%; 
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientBG 5s ease infinite;
+            z-index: 1000; flex-direction: column; align-items: center; justify-content: center; color: #fff; text-align: center; 
         }
-
-        #start-popup { 
-            position: fixed; z-index: 2000; top: 0; left: 0; 
-            width: 100%; height: 100%; background: #000; 
-            display: flex; align-items: center; justify-content: center; 
-        }
+        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        #prank-screen h2 { font-size: 5rem; text-shadow: 4px 4px #000; }
     </style>
 </head>
 <body>
 
     <div id="start-popup">
-        <button onclick="startEverything()" style="padding: 20px 50px; font-size: 2rem; background: red; color: white; border: none; cursor: pointer; font-weight: bold;">
-            SYSTEM SECURITY CHECK
-        </button>
+        <div>
+            <h2 style="color: red; font-size: 2rem;">⚠️ SYSTEM THREAT DETECTED ⚠️</h2>
+            <p>Scanning for viruses...</p>
+            <button class="popup-btn" onclick="startEverything()">FIX ALL ERRORS</button>
+        </div>
     </div>
 
     <canvas id="matrix"></canvas>
 
     <div class="overlay" id="main-content">
         <div class="warning-box" id="wb">
-            <h1>CRITICAL FAILURE</h1>
-            <p>আপনার সকল ডাটা এনক্রিপ্ট হচ্ছে।<br>১ মিনিটের মধ্যে 1000 টাকা না পাঠালে ফাইলগুলো বিস্ফোরিত হবে!</p>
+            <h1>CRITICAL OVERLOAD</h1>
+            <p style="color: white; font-weight: bold;">আপনার সকল ডাটা এনক্রিপ্ট হচ্ছে।<br>১ মিনিটের মধ্যে 1000 টাকা না পাঠালে ফাইলগুলো বিস্ফোরিত হবে!</p>
             <div class="timer-text" id="timer">01:00</div>
-            <button class="btn" onclick="triggerPrank()">টাকা পাঠাতে এখানে ক্লিক করুন</button>
+            <button onclick="triggerPrank()" style="background:red; color:white; padding:15px 30px; border:2px solid white; cursor:pointer; font-weight:bold; font-size: 1.1rem;">টাকা পাঠাতে এখানে ক্লিক করুন</button>
         </div>
     </div>
 
     <div id="prank-screen">
-        <h2 style="font-size: 6rem; margin: 0; color: red;">😂 PRANKED! 😂</h2>
-        <p style="font-size: 24px; font-weight: bold;">আপনার ডিভাইস সম্পূর্ণ নিরাপদ।</p>
-        <button onclick="location.reload()" style="padding: 10px; margin-top: 20px; cursor: pointer;">RESTART</button>
+        <h2>😂 PRANKED! 😂</h2>
+        <p style="font-size: 24px; font-weight:bold; background: rgba(0,0,0,0.3); padding: 10px;">আপনার ডিভাইস নিরাপদ। এটি একটি প্র্যাঙ্ক ছিল!</p>
+        <button onclick="location.reload()" style="padding:10px 25px; margin-top:20px; cursor:pointer; font-weight:bold; border-radius: 20px; border:none;">RESTART SYSTEM</button>
     </div>
 
     <audio id="siren-audio" loop>
@@ -122,6 +97,7 @@
 
         function startEverything() {
             document.getElementById('start-popup').style.display = 'none';
+            document.getElementById('wb').style.display = 'block';
             siren.play();
             timerInterval = setInterval(() => {
                 if (timeLeft <= 0) { clearInterval(timerInterval); triggerPrank(); return; }
@@ -131,22 +107,20 @@
             }, 1000);
         }
 
-        // মুভিং ব্যাকগ্রাউন্ড (আপনার প্রিয় প্রতীকগুলো দিয়ে)
         const canvas = document.getElementById('matrix');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth; canvas.height = window.innerHeight;
         const chars = "*#(&%$#)*&$%078783HU#*09*#)(%";
-        const fontSize = 18;
+        const fontSize = 16;
         const columns = canvas.width / fontSize;
         const drops = Array(Math.floor(columns)).fill(1);
 
         function draw() {
-            ctx.fillStyle = "rgba(0, 0, 0, 0.05)"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "rgba(0, 0, 0, 0.1)"; ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.fillStyle = "#0F0"; ctx.font = fontSize + "px Courier New";
             for (let i = 0; i < drops.length; i++) {
                 const text = chars.charAt(Math.floor(Math.random() * chars.length));
-                // ক্যারেক্টারগুলো একটু কাঁপানো (Random X movement)
-                ctx.fillText(text, (i * fontSize) + (Math.random()*2), drops[i] * fontSize);
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
                 if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
                 drops[i]++;
             }
