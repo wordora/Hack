@@ -1,118 +1,93 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRITICAL SYSTEM ERROR</title>
+    <title>Advanced Glitch Matrix</title>
     <style>
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: black; overflow: hidden; font-family: 'Courier New', monospace; }
-        
-        /* পেছনের হ্যাকিং কোড ইফেক্ট */
-        #matrix-bg {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            color: #00FF00; font-size: 14px; line-height: 1.2;
-            white-space: pre-wrap; word-break: break-all;
-            opacity: 0.4; z-index: 1;
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: #000;
+            color: #00ff41; /* ম্যাট্রিক্স গ্রিন */
+            font-family: 'Courier New', monospace;
         }
 
-        .overlay { position: relative; z-index: 10; display: flex; align-items: center; justify-content: center; height: 100vh; }
-
-        .warning-box {
-            background: rgba(20, 0, 0, 0.9); border: 3px solid #ff0000;
-            padding: 40px; text-align: center; box-shadow: 0 0 50px #ff0000;
-            max-width: 500px; color: white; animation: shake 0.5s infinite;
+        /* পুরো স্ক্রিন জুড়ে সংখ্যার লেয়ার */
+        #glitch-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            word-break: break-all;
+            opacity: 0.4;
+            font-size: 12px;
+            line-height: 1;
+            z-index: 1;
         }
 
-        @keyframes shake { 0% { transform: translate(1px, 1px); } 50% { transform: translate(-2px, 2px); } 100% { transform: translate(1px, -1px); } }
-
-        h1 { color: #ff0000; font-size: 1.8rem; text-transform: uppercase; margin-bottom: 10px; }
-        .target-name { color: #ffffff; font-size: 1.5rem; font-weight: bold; text-decoration: underline; }
-        .timer-text { font-size: 3.5rem; color: #ffff00; margin: 15px 0; font-weight: bold; }
-        
-        .btn {
-            background: #ff0000; color: white; padding: 15px 30px;
-            font-size: 1.2rem; border: none; cursor: pointer;
-            font-weight: bold; text-decoration: none; display: inline-block;
-            box-shadow: 0 0 15px #ff0000;
+        /* মাঝখানের মেইন কন্টেইনার */
+        .overlay {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            background: radial-gradient(circle, transparent 20%, black 90%);
         }
 
-        #prank-screen {
-            display: none; position: fixed; top: 0; left: 0;
-            width: 100%; height: 100%; background: linear-gradient(45deg, #12c2e9, #c471ed, #f64f59);
-            z-index: 100; flex-direction: column; align-items: center;
-            justify-content: center; color: white; text-align: center;
+        .glitch-text {
+            font-size: 5vw;
+            font-weight: bold;
+            text-shadow: 2px 2px #ff0000, -2px -2px #0000ff;
+            animation: glitch-anim 0.2s infinite;
         }
-        
-        #prank-screen h2 { font-size: 4rem; margin: 0; }
 
-        /* বিস্ফোরণ ইফেক্ট এর জন্য */
-        .explode-animation { animation: explode 0.8s forwards; }
-        @keyframes explode {
-            0% { transform: scale(1); opacity: 1; }
-            100% { transform: scale(5); opacity: 0; }
+        @keyframes glitch-anim {
+            0% { transform: skew(2deg); filter: hue-rotate(0deg); }
+            50% { transform: skew(-3deg); filter: hue-rotate(90deg); }
+            100% { transform: skew(1deg); filter: hue-rotate(180deg); }
+        }
+
+        .data-stream {
+            font-size: 1.5rem;
+            color: #fff;
+            background: rgba(255, 0, 0, 0.3);
+            padding: 5px 20px;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
 
-    <div id="matrix-bg"></div>
+    <div id="glitch-canvas"></div>
 
-    <div class="overlay" id="main-content">
-        <div class="warning-box" id="wb">
-            <h1>⚠️ SYSTEM BREACH ⚠️</h1>
-            <p class="target-name">Ahmed Maimun ,</p>
-            <p>আপনার সকল ডাটা এনক্রিপ্ট হচ্ছে।</p>
-            <p>২ মিনিটের মধ্যে 1000 টাকা না পাঠালে ফাইলগুলো বিস্ফোরিত হবে!</p>
-            <div class="timer-text" id="timer">02:00</div>
-            <button class="btn" onclick="triggerPrank()">নিচের এইখানে ক্লিক করলে টাকা পাঠান</button>
-        </div>
-    </div>
-
-    <div id="prank-screen">
-        <h2>😂 PRANKED! 😂</h2>
-        <p>আপনার ফোন বা কম্পিউটার একদম নিরাপদ।</p>
-        <button onclick="location.reload()" style="padding: 10px; margin-top: 20px; cursor: pointer;">আবার দেখুন</button>
+    <div class="overlay">
+        <div class="glitch-text">CRITICAL ERROR</div>
+        <div class="data-stream">940#()%&$)*$9304-0*#%&#(@)(#*(R&$*(#&)(*</div>
     </div>
 
     <script>
-        // পেছনের অদ্ভুত কোড জেনারেটর
-        const bg = document.getElementById('matrix-bg');
-        const chars = "W*(&)A#A#*(A#*%)(&%)*()&%#$@!^&*(0987654321";
-        function updateMatrix() {
-            let content = "";
-            for(let i=0; i<1200; i++) {
-                content += chars.charAt(Math.floor(Math.random() * chars.length));
+        const container = document.getElementById('glitch-canvas');
+        const glitchChars = "940#()%&$)*$9304-0*#%&#(@)(#*(R&$*(#&)(*";
+        
+        // স্ক্রিন সাইজ অনুযায়ী সংখ্যার পরিমাণ নির্ধারণ
+        function fillScreen() {
+            let totalChars = (window.innerWidth * window.innerHeight) / 50; 
+            let output = "";
+            for (let i = 0; i < totalChars; i++) {
+                output += glitchChars[Math.floor(Math.random() * glitchChars.length)];
             }
-            bg.innerText = content;
-        }
-        setInterval(updateMatrix, 50);
-
-        // টাইমার লজিক
-        let timeLeft = 120;
-        const timerInterval = setInterval(() => {
-            if (timeLeft <= 0) {
-                clearInterval(timerInterval);
-                autoExplode(); // সময় শেষ হলে বিস্ফোরণ
-                return;
-            }
-            timeLeft--;
-            let mins = Math.floor(timeLeft / 60);
-            let secs = timeLeft % 60;
-            document.getElementById('timer').innerText = `0${mins}:${secs < 10 ? '0' + secs : secs}`;
-        }, 1000);
-
-        function triggerPrank() {
-            clearInterval(timerInterval);
-            document.getElementById('main-content').style.display = 'none';
-            document.getElementById('prank-screen').style.display = 'flex';
+            container.innerText = output;
         }
 
-        function autoExplode() {
-            document.getElementById('wb').classList.add('explode-animation');
-            setTimeout(() => {
-                triggerPrank();
-            }, 800);
-        }
+        // দ্রুত পরিবর্তনের জন্য ইন্টারভাল
+        setInterval(fillScreen, 50);
+
+        // উইন্ডো রিসাইজ করলে অ্যাডজাস্ট হবে
+        window.addEventListener('resize', fillScreen);
     </script>
 </body>
 </html>
