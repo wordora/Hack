@@ -3,52 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FATAL SYSTEM ERROR</title>
+    <title>SYSTEM CRITICAL ERROR</title>
     <style>
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; overflow: hidden; font-family: 'Courier New', Courier, monospace; }
-        
-        /* পুরো স্ক্রিন জুড়ে হিজিবিজি কোড */
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; overflow: hidden; font-family: 'Courier New', monospace; cursor: crosshair; }
         canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
-
         .overlay { position: relative; z-index: 10; display: flex; align-items: center; justify-content: center; height: 100vh; background: rgba(0,0,0,0.4); }
-
-        .warning-box {
-            background: rgba(30, 0, 0, 0.95); border: 4px double #ff0000;
-            padding: 30px; text-align: center; box-shadow: 0 0 100px #ff0000;
-            max-width: 450px; color: #ff0000; animation: shake 0.1s infinite;
-        }
-
-        @keyframes shake {
-            0% { transform: translate(2px, 2px); }
-            50% { transform: translate(-2px, -2px); }
-            100% { transform: translate(2px, -2px); }
-        }
-
-        h1 { font-size: 2.2rem; margin: 0; text-decoration: underline; background: red; color: black; padding: 5px; }
-        p { color: #fff; font-weight: bold; font-size: 1.1rem; line-height: 1.4; margin: 15px 0; }
-        
-        .timer-text { font-size: 4.5rem; color: #ffff00; text-shadow: 0 0 20px yellow; font-weight: bold; margin: 10px 0; }
-        
-        .btn {
-            background: #ff0000; color: white; padding: 20px 40px;
-            font-size: 1.3rem; border: 5px solid #fff; cursor: pointer;
-            font-weight: 900; text-transform: uppercase;
-        }
-
-        #prank-screen {
-            display: none; position: fixed; top: 0; left: 0;
-            width: 100%; height: 100%; background: #fff;
-            z-index: 1000; flex-direction: column; align-items: center;
-            justify-content: center; color: #000; text-align: center;
-        }
-        
-        #prank-screen h2 { font-size: 6rem; margin: 0; animation: pulse 0.5s infinite; }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+        .warning-box { background: rgba(40, 0, 0, 0.9); border: 4px double #ff0000; padding: 30px; text-align: center; box-shadow: 0 0 100px #ff0000; max-width: 450px; color: #ff0000; animation: shake 0.1s infinite; }
+        @keyframes shake { 0% { transform: translate(2px, 2px); } 50% { transform: translate(-2px, -2px); } 100% { transform: translate(2px, -2px); } }
+        h1 { font-size: 2rem; margin: 0; background: red; color: black; padding: 5px; }
+        p { color: #fff; font-weight: bold; margin: 15px 0; font-size: 1.1rem; }
+        .timer-text { font-size: 4rem; color: #ffff00; font-weight: bold; margin: 10px 0; }
+        .btn { background: #ff0000; color: white; padding: 20px 40px; font-size: 1.3rem; border: 4px solid #fff; cursor: pointer; font-weight: 900; }
+        #prank-screen { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #fff; z-index: 1000; flex-direction: column; align-items: center; justify-content: center; color: #000; text-align: center; }
+        #prank-screen h2 { font-size: 5rem; margin: 0; color: #ff0000; }
     </style>
 </head>
-<body>
-
-    <canvas id="matrix"></canvas>
+<body onclick="initAudio()"> <canvas id="matrix"></canvas>
 
     <div class="overlay" id="main-content">
         <div class="warning-box" id="wb">
@@ -61,28 +31,61 @@
 
     <div id="prank-screen">
         <h2>😂 PRANKED! 😂</h2>
-        <p style="color:red; font-size: 20px;">আপনার ফোন একদম নিরাপদ। এটি শুধু একটি মজা ছিল!</p>
-        <button onclick="location.reload()" style="padding:10px; margin-top:30px; cursor:pointer;">RESTART SYSTEM</button>
+        <p style="font-size: 24px; font-weight:bold;">আপনার ফোন নিরাপদ। এটি একটি প্র্যাঙ্ক ছিল!</p>
+        <button onclick="location.reload()" style="padding:10px; margin-top:30px; cursor:pointer;">RESTART</button>
     </div>
 
     <script>
-        // পুরো স্ক্রিন জুড়ে গিঞ্জি হ্যাকিং কোড ইফেক্ট (Matrix style)
+        // সাউন্ড ইঞ্জিন (জাভাস্ক্রিপ্ট)
+        let audioCtx;
+        let sirenInterval;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                startSiren();
+            }
+        }
+
+        function startSiren() {
+            sirenInterval = setInterval(() => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.5);
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.5);
+            }, 600);
+        }
+
+        function playLaughter() {
+            for(let i=0; i<10; i++) {
+                const osc = audioCtx.createOscillator();
+                osc.connect(audioCtx.destination);
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(400 + Math.random()*600, audioCtx.currentTime + i*0.1);
+                osc.start(audioCtx.currentTime + i*0.1);
+                osc.stop(audioCtx.currentTime + i*0.1 + 0.1);
+            }
+        }
+
+        // Matrix Background
         const canvas = document.getElementById('matrix');
         const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
-        const chars = "W*(&)A#A#*(A#*%)(&%)*()&%#$@!^&*0987654321#$(*@&R$*(@%R";
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        const chars = "*#(&%$#)*&$%078783HU#*09*#)(%";
         const fontSize = 16;
         const columns = canvas.width / fontSize;
         const drops = Array(Math.floor(columns)).fill(1);
 
         function draw() {
-            ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = "#0F0";
-            ctx.font = fontSize + "px Courier New";
-
+            ctx.fillStyle = "rgba(0, 0, 0, 0.1)"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "#0F0"; ctx.font = fontSize + "px Courier New";
             for (let i = 0; i < drops.length; i++) {
                 const text = chars.charAt(Math.floor(Math.random() * chars.length));
                 ctx.fillText(text, i * fontSize, drops[i] * fontSize);
@@ -92,32 +95,21 @@
         }
         setInterval(draw, 33);
 
-        // ১ মিনিটের টাইমার (৬০ সেকেন্ড)
+        // ১ মিনিটের টাইমার
         let timeLeft = 60;
         const timerInterval = setInterval(() => {
-            if (timeLeft <= 0) {
-                clearInterval(timerInterval);
-                explode();
-                return;
-            }
+            if (timeLeft <= 0) { clearInterval(timerInterval); triggerPrank(); return; }
             timeLeft--;
-            let mins = Math.floor(timeLeft / 60);
             let secs = timeLeft % 60;
-            document.getElementById('timer').innerText = `0${mins}:${secs < 10 ? '0' + secs : secs}`;
+            document.getElementById('timer').innerText = `00:${secs < 10 ? '0' + secs : secs}`;
         }, 1000);
 
         function triggerPrank() {
             clearInterval(timerInterval);
+            clearInterval(sirenInterval);
+            if(audioCtx) playLaughter();
             document.getElementById('main-content').style.display = 'none';
             document.getElementById('prank-screen').style.display = 'flex';
-        }
-
-        function explode() {
-            const wb = document.getElementById('wb');
-            wb.style.transition = "transform 0.5s ease-in";
-            wb.style.transform = "scale(10)";
-            wb.style.opacity = "0";
-            setTimeout(triggerPrank, 500);
         }
     </script>
 </body>
